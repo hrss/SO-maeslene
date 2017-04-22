@@ -8,17 +8,94 @@
 #define MAX 20 //máximo de clientes na barbearia
 #define CP N-7 //clientes em peh
 
-int Totalclientes = 0; //total de clientes na barbearia
+typedef enum {E, S, C, P} estado_t; /*Esperando, Sofa, Cadeira, Pagando*/
+estado_t estado[N];
+int tc = 0; //total de clientes na barbearia
 sem_t mutex; // protege o contador de clientes na loja e a listas de espera
 sem_t sofa; //clientes sentados no sofa
 sem_t barbeiro; //havera um semáforo para cada barbeiro,ou seja, 3
 sem_t pagamento;//sinaliza que o cliente pagou
 
+
+void exibe_barbearia() {
+  int i,p = 0,c=0,s=0;
+  for(i = 0; i < N; i++){
+    if(estado[i] == 'P'){
+      p = 1;
+      printf("B II %d  ",i);
+    }
+  }
+  if(p == 0){
+    printf(" II ");
+  }
+  for(i = 0;i<N;i++){
+    if(estado[i] == 'C'){
+      c++;
+      printf("|B %d| ",i);
+    }   
+  }
+  switch(c){
+    case 0: printf("|B | |B | |B | ");
+    break;
+    case 1: printf("|B | |B | ");
+    break;
+    case 2: printf("|B | ");
+    break;
+  }
+  printf(" |");
+  for(i = 0;i<N;i++){
+    if(estado[i] == 'S'){
+      s++;
+      if(s < 4){
+        printf("%d ",i);
+      }
+      else
+        printf("%d",i);
+    }   
+  }
+  switch(s){
+    case 0: printf("        ");
+    break;
+    case 1: printf("      ");
+    break;
+    case 2: printf("    ");
+    break;
+    case 3: printf("  ");
+  }
+  printf("|  |");
+  for(i = 0;i<N;i++){
+    if(estado[i] == 'E'){
+      printf("%d ",i);
+    }   
+  }
+
+  printf("\n");
+}
 //threads que os clientes fazem
-void entraBarbearia();
-void sentaSofa();
-void temCabeloCortado();
-void paga();
+void entraBarbearia(int cliente_id){
+  int entrou = 0;
+  sem_wait(&mutex);
+  if(tc < MAX){
+    tc++;
+    entrou = 1;
+  }
+  sem_post(&mutex);
+  if(entrou){
+    sentaSofa();
+  }
+}
+void sentaSofa(int cliente_id){
+  sem_wait(&sofa);
+  temCabeloCortado(cliente_id);
+}
+void temCabeloCortado(int cliente_id){
+  sem_wait(&barbeiro);
+  sem_post(&sofa);
+  paga(cliente_id);
+}
+void paga(int cliente_id){
+  sem_wait()
+}
 
 //threads que os barbeiros fazem
 void cortarCabelo();
@@ -26,7 +103,7 @@ void recebePagamento();
 void dorme();
 
 void barbeiro(int cliente_id){
- 
+
 }
 void* cliente(void *v){
   int id_cliente = *(int *) v;
