@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #define N 20
-typedef enum {E, S, C, P} estado_t; /*Esperando, Sofa, Cadeira, Pagando*/
+typedef enum {E, S, C, P, T} estado_t; /*Esperando, Sofa, Cadeira, Pagando, Tentando entrar na barbearia*/
 estado_t estado[N];
 
 void exibe_barbearia() {
@@ -10,11 +10,11 @@ void exibe_barbearia() {
 	for(i = 0; i < N; i++){
 		if(estado[i] == 'P'){
 			p = 1;
-			printf("B II %d  ",i);
+			printf("B II %d ",i);
 		}
 	}
 	if(p == 0){
-		printf(" II ");
+		printf("  II   ");
 	}
 	for(i = 0;i<N;i++){
 		if(estado[i] == 'C'){
@@ -56,6 +56,13 @@ void exibe_barbearia() {
 			printf("%d ",i);
 		}		
 	}
+	printf(" || ");
+	
+	for(i = 0;i<N;i++){
+		if(estado[i] == 'T'){
+			printf("%d ",i);
+		}		
+	}
 
 	printf("\n");
 }
@@ -67,7 +74,7 @@ int main(){
 		estado[i] = 'E';
 	}
 	for(i = 4;i<8;i++){
-		estado[i] = 'S';
+		estado[i] = 'T';
 	}
 	for(i = 8;i<N;i++){
 		estado[i] = 'E';

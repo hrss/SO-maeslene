@@ -8,7 +8,7 @@
 #define MAX 20 //máximo de clientes na barbearia
 #define CP N-7 //clientes em peh
 
-typedef enum {E, S, C, P} estado_t; /*Esperando, Sofa, Cadeira, Pagando*/
+typedef enum {E, S, C, P, T} estado_t; /*Esperando, Sofa, Cadeira, Pagando, Tentando entrar na barbearia*/
 estado_t estado[N];
 int tc = 0; //total de clientes na barbearia
 sem_t mutex; // protege o contador de clientes na loja e a listas de espera
@@ -22,11 +22,11 @@ void exibe_barbearia() {
   for(i = 0; i < N; i++){
     if(estado[i] == 'P'){
       p = 1;
-      printf("B II %d  ",i);
+      printf("B II %d ",i);
     }
   }
   if(p == 0){
-    printf(" II ");
+    printf("  II   ");
   }
   for(i = 0;i<N;i++){
     if(estado[i] == 'C'){
@@ -65,6 +65,13 @@ void exibe_barbearia() {
   printf("|  |");
   for(i = 0;i<N;i++){
     if(estado[i] == 'E'){
+      printf("%d ",i);
+    }   
+  }
+  printf(" || ");
+  
+  for(i = 0;i<N;i++){
+    if(estado[i] == 'T'){
       printf("%d ",i);
     }   
   }
