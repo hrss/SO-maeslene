@@ -208,7 +208,8 @@ sem_post(&mutexGeral);
 
 
 void* F_barbeiro(void *v){
-	while(1) {
+	int j;
+	for(j = 0; j < 2; j++){
 	int i;
   sem_wait(&mutexBarbeiro);/*um barbeiro recebo o cliente de cada vez*/
   sem_wait(&clientesEsp);/*caso um cliente chegue, o barbeiro acorda*/
@@ -238,6 +239,7 @@ void* F_barbeiro(void *v){
   exibe_barbearia();
   sem_post(&mutexGeral);
   }
+  exit(0);
 
 }
 
